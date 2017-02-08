@@ -2,6 +2,7 @@ package com.cgpink.photogallery;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -9,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +33,7 @@ import java.util.List;
  * Created by pinkgom on 2017-01-05.
  */
 
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
 
     private static final String TAG = "PhotoGalleryFragment";
 
@@ -237,21 +237,32 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class GalleryViewHolder extends RecyclerView.ViewHolder {
+    private class GalleryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mItemImageView;
+        private GalleryItem mGalleryItem;
 
         public GalleryViewHolder(View itemView) {
             super(itemView);
             mItemImageView = (ImageView) itemView.findViewById(R.id.fragment_photo_gallery_image_view);
+            itemView.setOnClickListener(this);
         }
 
         public void bindGalleryItem(Drawable drawable) {
             mItemImageView.setImageDrawable(drawable);
-
             /*Picasso.with(getActivity())
                     .load(galleryItem.getUrl())
                     .placeholder(R.drawable.bill_up_close)
                     .into(mItemImageView);*/
+        }
+
+        public void bindGalleryItem(GalleryItem item) {
+            mGalleryItem = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(Intent.ACTION_VIEW, mGalleryItem.getPhotoPageUri());
+            startActivity(i);
         }
     }
 
@@ -275,7 +286,7 @@ public class PhotoGalleryFragment extends Fragment {
         public void onBindViewHolder(GalleryViewHolder holder, int position) {
             GalleryItem galleryItem = mGalleryItems.get(position);
 
-            //holder.bindGalleryItem(galleryItem);
+            holder.bindGalleryItem(galleryItem);
 
             Drawable placeholder = getResources().getDrawable(R.drawable.bill_up_close);
             holder.bindGalleryItem(placeholder);

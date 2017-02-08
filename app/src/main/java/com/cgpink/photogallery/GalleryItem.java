@@ -1,5 +1,7 @@
 package com.cgpink.photogallery;
 
+import android.net.Uri;
+
 /**
  * Created by pinkgom on 2017-01-06.
  */
@@ -8,6 +10,7 @@ public class GalleryItem {
     private String mCaption;
     private String mId;
     private String mUrl;
+    private String mOwner;
 
     public String getCaption() {
         return mCaption;
@@ -33,8 +36,25 @@ public class GalleryItem {
         mUrl = url;
     }
 
+    public String getOwner() {
+        return mOwner;
+    }
+
+    public void setOwner(String owner) {
+        mOwner = owner;
+    }
+
     @Override
     public String toString() {
         return mCaption;
     }
+
+    public Uri getPhotoPageUri() {
+        return Uri.parse("http://www.flickr.com/photos/")
+                .buildUpon()
+                .appendPath(mOwner)
+                .appendPath(mId)
+                .build();
+    }
+
 }
